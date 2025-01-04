@@ -3,7 +3,6 @@
 <head>
     <title>Security Operations Assistant</title>
     <style>
-        /* Base styles for a clean, professional look */
         body {
             width: 400px;
             padding: 16px;
@@ -11,7 +10,6 @@
             margin: 0;
         }
 
-        /* Header section styling */
         .header {
             background-color: #1a237e;
             color: white;
@@ -20,7 +18,6 @@
             border-bottom: 3px solid #0d47a1;
         }
 
-        /* Status panel styling */
         .status-panel {
             background-color: #f5f5f5;
             border-radius: 4px;
@@ -28,7 +25,6 @@
             margin-bottom: 16px;
         }
 
-        /* Status indicator dot */
         .status-indicator {
             display: inline-block;
             width: 10px;
@@ -47,28 +43,99 @@
             box-shadow: 0 0 5px #f44336;
         }
 
-        /* Alert section styling */
-        .alert-container {
+        .config-panel {
             border: 1px solid #e0e0e0;
             border-radius: 4px;
             padding: 12px;
+            margin-bottom: 16px;
         }
 
-        /* Loading animation */
-        .loading {
-            text-align: center;
-            color: #666;
-            padding: 20px;
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group input[type="password"] {
+            font-family: monospace;
+        }
+
+        .button {
+            background-color: #1a237e;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .button:hover {
+            background-color: #0d47a1;
+        }
+
+        .button:disabled {
+            background-color: #9e9e9e;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom-color: #1a237e;
+            color: #1a237e;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <!-- Header section -->
     <div class="header">
         <h2 style="margin: 0;">Security Operations Assistant</h2>
     </div>
 
-    <!-- Status information panel -->
     <div class="status-panel">
         <div id="monitoringStatus">
             <span class="status-indicator"></span>
@@ -79,10 +146,47 @@
         </div>
     </div>
 
-    <!-- Alert information section -->
-    <div class="alert-container" id="alertContainer">
-        <div class="loading">
-            Loading security alerts...
+    <div class="tabs">
+        <div class="tab active" data-tab="alerts">Alerts</div>
+        <div class="tab" data-tab="config">Configuration</div>
+    </div>
+
+    <div id="alertsTab" class="tab-content active">
+        <div class="alert-container" id="alertContainer">
+            <div class="loading">
+                Loading security alerts...
+            </div>
+        </div>
+    </div>
+
+    <div id="configTab" class="tab-content">
+        <div class="config-panel">
+            <form id="siemConfigForm">
+                <h3>Splunk Configuration</h3>
+                <div class="form-group">
+                    <label for="splunkUrl">Splunk URL</label>
+                    <input type="url" id="splunkUrl" placeholder="https://your-splunk-instance.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="splunkToken">Splunk Token</label>
+                    <input type="password" id="splunkToken" placeholder="Enter your Splunk API token" required>
+                </div>
+
+                <h3>Wazuh Configuration</h3>
+                <div class="form-group">
+                    <label for="wazuhUrl">Wazuh URL</label>
+                    <input type="url" id="wazuhUrl" placeholder="https://your-wazuh-instance.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="wazuhToken">Wazuh Token</label>
+                    <input type="password" id="wazuhToken" placeholder="Enter your Wazuh API token" required>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="button">Save Configuration</button>
+                    <div id="configMessage"></div>
+                </div>
+            </form>
         </div>
     </div>
 

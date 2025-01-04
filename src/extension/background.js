@@ -1,8 +1,10 @@
 // background.js
 import SIEMConnector from '../integrations/siemConnector.js';
+import encryptionService from '../services/encryptionService.js';
 
 class SecurityMonitor {
     constructor() {
+        this.initializeEncryption();
         this.state = {
             isMonitoring: false,
             lastCheck: null,
@@ -11,6 +13,49 @@ class SecurityMonitor {
             alerts: [], // Store recent alerts
             config: null // Will store SIEM configuration
         };
+
+    async initializeEncryption() {
+        try {
+            await encryptionService.initialize();
+        } catch (error) {
+            console.error('Failed to initialize encryption:', error);
+        }
+    }
+    
+    async initializeSIEM(config = null) {
+            if (config) {
+                // Decrypt tokens before initializing SIEM connector
+                const decryptedConfig = {
+                    ...config,
+                    splunkToken: await encryptionService.decrypt(config.splunkToken),
+                    wazuhToken: await encryptionService.decrypt(config.wazuhToken)
+                };
+                this.state.config = decryptedConfig;
+            }
+            
+            this.siemConnector = new SIEMConnector({
+                splunkUrl: this.state.config?.splunkUrl,
+                splunkToken: this.state.config?.splunkToken,
+                wazuhUrl: this.state.config?.wazuhUrl,
+                wazuhToken: this.state.config?.wazuhToken,
+                refreshInterval: 300000
+            });
+    
+            this.siemConnector.onNewAlert(this.handleNewAlert.bind(this));
+        }
+    
+        async updateConfig(newConfig) {
+            try {
+                // Store encrypted version
+                this.state.config = newConfig;
+                await this.initializeSIEM(newConfig);
+                await this.saveState();
+                return { success: true };
+            } catch (error) {
+                console.error('Error updating configuration:', error);
+                return { success: false, error: error.message };
+            }
+        }
         
         // Initialize SIEM connector
         this.siemConnector = null;
