@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Security Operations Assistant",
+    "version": "1.0.0",
+    "description": "AI-powered security operations extension",
+    "permissions": [
+      "storage",
+      "alarms"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }

@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+
+# Build
+dist/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Extension
+*.crx
+*.pem
+
+# Misc
+.DS_Store
